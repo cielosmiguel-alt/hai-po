@@ -19,7 +19,7 @@
             justify-content: center;
             align-items: center;
             background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e),
-                        url('https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1080&q=80');
+                        url('https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=1080&q=80');
             background-size: cover;
             background-position: center;
             font-family: 'Poppins', sans-serif;
@@ -80,6 +80,73 @@
             text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
         }
  
+        .form-container {
+            display: none;
+            margin-top: 2rem;
+            text-align: center;
+        }
+ 
+        .form-container.show {
+            display: block;
+        }
+ 
+        .why-question {
+            font-size: 1.3rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+        }
+ 
+        textarea {
+            width: 100%;
+            max-width: 300px;
+            padding: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            resize: none;
+            margin-bottom: 1rem;
+            outline: none;
+        }
+ 
+        textarea::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+ 
+        textarea:focus {
+            border-color: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.15);
+        }
+ 
+        .send-btn {
+            padding: 0.8rem 2rem;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+ 
+        .send-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+ 
+        .success-message {
+            margin-top: 1rem;
+            font-size: 1rem;
+            color: #90EE90;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.8);
+        }
+ 
         @media (max-width: 480px) {
             h1 {
                 font-size: 3.5rem;
@@ -103,14 +170,58 @@
     </div>
     <p class="response" id="response"></p>
  
+    <div class="form-container" id="formContainer">
+        <p class="why-question">Bakit?</p>
+        <textarea id="messageInput" rows="4" placeholder=" hii"></textarea>
+        <button class="send-btn" onclick="sendMessage()">Send</button>
+        <p class="success-message" id="successMessage"></p>
+    </div>
+ 
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script>
+        (function(){
+            emailjs.init("P2XpI_8SYcNChNB_6");
+        })();
+ 
         function respond(answer) {
             const response = document.getElementById('response');
+            const formContainer = document.getElementById('formContainer');
+ 
             if (answer === 'Oo') {
                 response.textContent = 'Yun ohhh';
+                formContainer.classList.remove('show');
             } else {
                 response.textContent = 'Awwwww';
+                formContainer.classList.add('show');
             }
+        }
+ 
+        function sendMessage() {
+            const message = document.getElementById('messageInput').value;
+            const successMessage = document.getElementById('successMessage');
+ 
+            if (!message.trim()) {
+                alert('wala kapa talagang nilalagay');
+                return;
+            }
+ 
+            const templateParams = {
+                to_name: 'Miguel',
+                from_name: 'Her',
+                message: message
+            };
+ 
+            emailjs.send('service_mjrxpqo', 'template_061tqic', templateParams)
+                .then(function() {
+                    successMessage.textContent = 'Message sent less go ';
+                    document.getElementById('messageInput').value = '';
+                    setTimeout(() => {
+                        successMessage.textContent = '';
+                    }, 3000);
+                }, function(error) {
+                    successMessage.textContent = 'Failed to send. Please try again awwww.';
+                    console.error('FAILED...', error);
+                });
         }
     </script>
 </body>
